@@ -1,11 +1,11 @@
-package com.coin.demo;
+package demo.coin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
-
+class CoinApplicationTests
+{
 	@Test
 	void contextLoads() {
 	}
