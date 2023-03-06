@@ -1,10 +1,10 @@
-package demo.coin;
+package demo.currency;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoinApplicationTests
+class CurrencyApplicationTests
 {
 	@Test
 	void contextLoads() {

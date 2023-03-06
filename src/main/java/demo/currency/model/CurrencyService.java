@@ -1,4 +1,4 @@
-package demo.coin.model;
+package demo.currency.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,31 +11,31 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class CoinService
+public class CurrencyService
 {
-    private CoinRepository coinRepository;
+    private CurrencyRepository currencyRepository;
 
     @Autowired
-    public CoinService( CoinRepository coinRepo ) {
-        this.coinRepository = coinRepo;
+    public CurrencyService( CurrencyRepository currRepo ) {
+        this.currencyRepository = currRepo;
     }
 
-    public boolean coinExists( String code ) {
-        return coinRepository.existsByCode( code );
+    public boolean currencyExists( String code ) {
+        return currencyRepository.existsByCode( code );
     }
 
-    public Coin save( Coin coin ) {
-        return coinRepository.save( coin );
+    public Currency save( Currency coin ) {
+        return currencyRepository.save( coin );
     }
 
-    public Coin updateByCode( String code, Coin patch )
+    public Currency updateByCode( String code, Currency patch )
     {
-        Optional< Coin > foundCoin = findByCode( code );
+        Optional< Currency > foundCoin = findByCode( code );
         if ( !foundCoin.isPresent() ) {
             return null;
         }
 
-        Coin updated = foundCoin.get();
+        Currency updated = foundCoin.get();
         if ( patch.getCode() != null ) {
             updated.setCode( patch.getCode() );
         }
@@ -46,16 +46,16 @@ public class CoinService
     }
 
     public void deleteByCode( String code ) {
-        coinRepository.deleteByCode( code );
+        currencyRepository.deleteByCode( code );
     }
 
-    public Optional< Coin > findByCode( String code ) {
-        return coinRepository.findByCodeIgnoringCase( code );
+    public Optional< Currency > findByCode( String code ) {
+        return currencyRepository.findByCodeIgnoringCase( code );
     }
 
     public String getNameByCode( String code )
     {
-        Optional< Coin > foundCoin = findByCode( code );
+        Optional< Currency > foundCoin = findByCode( code );
         if ( !foundCoin.isPresent() ) {
             return "";
         }
@@ -65,7 +65,7 @@ public class CoinService
     public Map< String, String > codeToNameMappings()
 	{
 		Map< String, String > mappings = new HashMap<>();
-        for ( Coin each: coinRepository.findAll() )
+        for ( Currency each: currencyRepository.findAll() )
         {
             mappings.put( each.getCode(), each.getName() );
         }

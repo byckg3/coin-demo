@@ -1,4 +1,4 @@
-package demo.coin.controller;
+package demo.currency.controller;
 
 import java.util.Optional;
 
@@ -16,36 +16,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import demo.coin.model.Coin;
-import demo.coin.model.CoinService;
+import demo.currency.model.Currency;
+import demo.currency.model.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping( path = "/coin" )
 @CrossOrigin( origins = "*" )
-public class CoinController
+public class CurrencyController
 {
-    private CoinService coinService;
+    private CurrencyService currencyService;
     
     @Autowired
-    public CoinController( CoinService coinService ) {
-        this.coinService = coinService;
+    public CurrencyController( CurrencyService currService ) {
+        this.currencyService = currService;
     }
 
     @PostMapping( consumes = "application/json" )
     @ResponseStatus( HttpStatus.CREATED )
-    public Coin createCoin( @RequestBody Coin coin )
+    public Currency createCoin( @RequestBody Currency coin )
     {
-        return coinService.save( coin );
+        return currencyService.save( coin );
     }
 
     @GetMapping( "/{code}" )
-    public ResponseEntity< Coin > getCoin( @PathVariable( "code" ) String codeName )
+    public ResponseEntity< Currency > getCoin( @PathVariable( "code" ) String code )
     {
-        Optional< Coin > foundCoin = coinService.findByCode( codeName );
+        Optional< Currency > foundCoin = currencyService.findByCode( code );
         if( foundCoin.isPresent() )
         {
             return ResponseEntity.ok( foundCoin.get() );
@@ -54,9 +53,9 @@ public class CoinController
     }
 
     @PatchMapping( path = "/{code}", consumes = "application/json" )
-    public Coin updateCoin( @PathVariable( "code" ) String codeName, @RequestBody Coin patch )
+    public Currency updateCoin( @PathVariable( "code" ) String code, @RequestBody Currency patch )
     {
-        return coinService.updateByCode( codeName, patch );
+        return currencyService.updateByCode( code, patch );
     }
 
     @DeleteMapping( "/{code}" )
@@ -64,7 +63,7 @@ public class CoinController
     public void deleteCoin( @PathVariable( "code" ) String codeName )
     {
         try {
-            coinService.deleteByCode( codeName );
+            currencyService.deleteByCode( codeName );
         }
         catch( EmptyResultDataAccessException e ) {
             System.out.println("codeName" + codeName );

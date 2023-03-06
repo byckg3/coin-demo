@@ -1,4 +1,4 @@
-package demo.coin.controller;
+package demo.currency.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,49 +8,40 @@ import java.util.Set;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-@RestController
-@RequestMapping( path = "/coindesk" )
-@CrossOrigin( origins = "*" )
-public class CoindeskController
+@Service
+public class CoindeskClient
 {
     private Map< String, String > namesByCodes;
     private RestTemplate restTemplate;
     private final String url = "https://api.coindesk.com/v1/bpi/currentprice.json";
     private final String dateFormat = "yyyy/MM/dd HH:mm:ss";
-
+    
     @Autowired
-    public CoindeskController( Map< String, String > mappings )
+    public CoindeskClient( Map< String, String > mappings )
     {
-        this.namesByCodes = mappings;
         this.restTemplate = new RestTemplate();
+        this.namesByCodes = mappings;
     }
 
-    @GetMapping()
-    public Map< String, Object > coindesk() throws JsonProcessingException
+    public void setCodeToNameMappings( Map< String, String > mappings ) {
+        this.namesByCodes = mappings;
+    }
+
+    public Map< String, Object > getCurrentPrice() throws JsonProcessingException
     {
         String jsonString = restTemplate.getForObject( url, String.class );
         return new ObjectMapper().readValue( jsonString, HashMap.class );
     }
 
-    @GetMapping( "/info" )
-    public Map< String, Object > info() throws JsonProcessingException
+    public Map< String, Object > getCurrentInfo() throws JsonProcessingException
     {
-        Map< String, Object > coindeskMap = coindesk();
+        Map< String, Object > coindeskMap = getCurrentPrice();
         JSONObject coindeskJSON = new JSONObject( coindeskMap );
 
         // fetch updated time
@@ -67,21 +58,12 @@ public class CoindeskController
 
             Map< String, String > currencyItems = new HashMap<>();
             currencyItems.put( "code", currencyCode );
-            currencyItems.put( "name", namesByCodes.get( currencyCode ) );
+            currencyItems.put( "name", namesByCodes.getOrDefault( currencyCode, "" ) );
             currencyItems.put( "rate", currencyJSON.getString( "rate" ) );
             
             info.put( currency, currencyItems );
         }
         return info;
-    }
-    
-    @ExceptionHandler( JsonProcessingException.class )
-    public ResponseEntity< ? > handleJsonException( JsonProcessingException e )
-    {
-        e.printStackTrace();
-        log.error( e.getMessage() );
-
-        return ResponseEntity.internalServerError().build();
     }
 
     private String convertIsoDateFormat( String dateString, String pattern )

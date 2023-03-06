@@ -1,4 +1,4 @@
-package demo.coin.model;
+package demo.currency.model;
 
 import java.util.Date;
 
@@ -15,15 +15,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 
 @Data
 @Entity
 @EntityListeners( value = AuditingEntityListener.class )
-@Table( name = "coins" )
-public class Coin implements java.io.Serializable
+@Table( name = "currencies" )
+public class Currency implements java.io.Serializable
 {
     private static final long serialVersionUID = 1L;
 
