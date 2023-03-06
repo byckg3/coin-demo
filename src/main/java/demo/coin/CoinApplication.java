@@ -11,5 +11,4 @@ public class CoinApplication {
 	public static void main( String[] args) {
 		SpringApplication.run( CoinApplication.class, args );
 	}
-
 }

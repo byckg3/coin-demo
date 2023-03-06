@@ -29,21 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 public class CoinController
 {
     private CoinService coinService;
-    private RestTemplate restTemplate;
     
     @Autowired
     public CoinController( CoinService coinService ) {
         this.coinService = coinService;
-        this.restTemplate = new RestTemplate();
-    }
-
-    @GetMapping( "/coindesk" )
-    public ResponseEntity< String > coindesk()
-    {
-        String url = "https://api.coindesk.com/v1/bpi/currentprice.json";
-        ResponseEntity< String > response = restTemplate.getForEntity( url, String.class );
-        
-        return response;
     }
 
     @PostMapping( consumes = "application/json" )

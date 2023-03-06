@@ -1,7 +1,7 @@
 package demo.coin.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -42,8 +42,7 @@ public class CoinService
         if ( patch.getName() != null ) {
             updated.setName( patch.getName() );
         }
-        
-        return coinRepository.save( updated );
+        return save( updated );
     }
 
     public void deleteByCode( String code ) {
@@ -54,11 +53,22 @@ public class CoinService
         return coinRepository.findByCodeIgnoringCase( code );
     }
 
-    public List< Coin > info()
+    public String getNameByCode( String code )
     {
-        List< Coin > info = new ArrayList<>();
-
-
-        return info;
+        Optional< Coin > foundCoin = findByCode( code );
+        if ( !foundCoin.isPresent() ) {
+            return "";
+        }
+        return foundCoin.get().getName();
     }
+
+    public Map< String, String > codeToNameMappings()
+	{
+		Map< String, String > mappings = new HashMap<>();
+        for ( Coin each: coinRepository.findAll() )
+        {
+            mappings.put( each.getCode(), each.getName() );
+        }
+        return mappings;
+	}
 }
