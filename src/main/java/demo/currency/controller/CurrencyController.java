@@ -1,5 +1,6 @@
 package demo.currency.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping( path = "/coin" )
+@RequestMapping( path = "/currencies" )
 @CrossOrigin( origins = "*" )
 public class CurrencyController
 {
@@ -34,33 +35,41 @@ public class CurrencyController
         this.currencyService = currService;
     }
 
-    @PostMapping( consumes = "application/json" )
-    @ResponseStatus( HttpStatus.CREATED )
-    public Currency createCoin( @RequestBody Currency coin )
+    @GetMapping()
+    public List< Currency > getAll()
     {
-        return currencyService.save( coin );
+        List< Currency > currencies = currencyService.findAll();
+        
+        return currencies;
     }
 
     @GetMapping( "/{code}" )
-    public ResponseEntity< Currency > getCoin( @PathVariable( "code" ) String code )
+    public ResponseEntity< Currency > get( @PathVariable( "code" ) String code )
     {
-        Optional< Currency > foundCoin = currencyService.findByCode( code );
-        if( foundCoin.isPresent() )
+        Optional< Currency > foundCurrency = currencyService.findByCode( code );
+        if( foundCurrency.isPresent() )
         {
-            return ResponseEntity.ok( foundCoin.get() );
+            return ResponseEntity.ok( foundCurrency.get() );
         }
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping( consumes = "application/json" )
+    @ResponseStatus( HttpStatus.CREATED )
+    public Currency create( @RequestBody Currency curr )
+    {
+        return currencyService.save( curr );
+    }
+
     @PatchMapping( path = "/{code}", consumes = "application/json" )
-    public Currency updateCoin( @PathVariable( "code" ) String code, @RequestBody Currency patch )
+    public Currency update( @PathVariable( "code" ) String code, @RequestBody Currency patch )
     {
         return currencyService.updateByCode( code, patch );
     }
 
     @DeleteMapping( "/{code}" )
     @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void deleteCoin( @PathVariable( "code" ) String codeName )
+    public void delete( @PathVariable( "code" ) String codeName )
     {
         try {
             currencyService.deleteByCode( codeName );

@@ -1,6 +1,7 @@
 package demo.currency.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,18 +25,18 @@ public class CurrencyService
         return currencyRepository.existsByCode( code );
     }
 
-    public Currency save( Currency coin ) {
-        return currencyRepository.save( coin );
+    public Currency save( Currency curr ) {
+        return currencyRepository.save( curr );
     }
 
     public Currency updateByCode( String code, Currency patch )
     {
-        Optional< Currency > foundCoin = findByCode( code );
-        if ( !foundCoin.isPresent() ) {
+        Optional< Currency > foundCurrency = findByCode( code );
+        if ( !foundCurrency.isPresent() ) {
             return null;
         }
 
-        Currency updated = foundCoin.get();
+        Currency updated = foundCurrency.get();
         if ( patch.getCode() != null ) {
             updated.setCode( patch.getCode() );
         }
@@ -53,19 +54,23 @@ public class CurrencyService
         return currencyRepository.findByCodeIgnoringCase( code );
     }
 
+    public List< Currency > findAll() {
+        return currencyRepository.findAll();
+    }
+
     public String getNameByCode( String code )
     {
-        Optional< Currency > foundCoin = findByCode( code );
-        if ( !foundCoin.isPresent() ) {
+        Optional< Currency > foundCurrency = findByCode( code );
+        if ( !foundCurrency.isPresent() ) {
             return "";
         }
-        return foundCoin.get().getName();
+        return foundCurrency.get().getName();
     }
 
     public Map< String, String > codeToNameMappings()
 	{
 		Map< String, String > mappings = new HashMap<>();
-        for ( Currency each: currencyRepository.findAll() )
+        for ( Currency each: findAll() )
         {
             mappings.put( each.getCode(), each.getName() );
         }
