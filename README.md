@@ -1,7 +1,8 @@
 # currency-demo
 ## commands
 - mvnw spring-boot:run
-- mvnw test -Dtest=<TestClassName>#<TestMethodName>
+- mvnw test
+- mvnw test -Dtest=< TestClassName >#< TestMethodName >
 
 
 ## references
