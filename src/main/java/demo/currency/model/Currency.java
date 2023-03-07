@@ -16,8 +16,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @EntityListeners( value = AuditingEntityListener.class )
 @Table( name = "currencies" )
@@ -32,7 +34,7 @@ public class Currency implements java.io.Serializable
     @Column( unique = true, nullable = false )
 	private String code;
 
-    @Column( unique = true, nullable = false )
+    @Column( nullable = false )
 	private String name;
 
     @CreatedDate
@@ -46,4 +48,9 @@ public class Currency implements java.io.Serializable
 	@Version
 	@Column
 	private Integer version;
+
+	public Currency( String code, String name ) {
+		this.code = code;
+		this.name = name;
+	}
 }

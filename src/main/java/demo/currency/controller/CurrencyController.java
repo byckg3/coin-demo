@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import demo.currency.model.Currency;
-import demo.currency.model.CurrencyService;
+import demo.currency.model.exception.CurrencyAlreadyExistsException;
+import demo.currency.model.exception.CurrencyNotFoundException;
+import demo.currency.model.exception.Error;
+import demo.currency.model.service.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,28 +39,28 @@ public class CurrencyController
     }
 
     @GetMapping()
-    public List< Currency > getAll()
-    {
-        List< Currency > currencies = currencyService.findAll();
-        
-        return currencies;
+    public List< Currency > getAll() {
+        return currencyService.getAll();
     }
 
     @GetMapping( "/{code}" )
-    public ResponseEntity< Currency > get( @PathVariable( "code" ) String code )
+    @ResponseStatus( HttpStatus.OK )
+    public Currency get( @PathVariable( "code" ) String code )
     {
         Optional< Currency > foundCurrency = currencyService.findByCode( code );
-        if( foundCurrency.isPresent() )
-        {
-            return ResponseEntity.ok( foundCurrency.get() );
+        if( !foundCurrency.isPresent() ) {
+            throw new CurrencyNotFoundException( code );
         }
-        return ResponseEntity.notFound().build();
+        return foundCurrency.get();
     }
 
     @PostMapping( consumes = "application/json" )
     @ResponseStatus( HttpStatus.CREATED )
     public Currency create( @RequestBody Currency curr )
     {
+        if ( currencyService.currencyExists( curr.getCode() ) ) {
+            throw new CurrencyAlreadyExistsException( curr.getCode(), curr.getName() );
+        }
         return currencyService.save( curr );
     }
 
@@ -78,5 +81,21 @@ public class CurrencyController
             System.out.println("codeName" + codeName );
             log.error( codeName + " " + e.getMessage() );
         }
+    }
+
+    @ExceptionHandler( CurrencyNotFoundException.class )
+    @ResponseStatus( HttpStatus.NOT_FOUND )
+    public Error handleJsonException( CurrencyNotFoundException e )
+    {
+        log.error( e.getMessage() );
+        return new Error( "currency " + e.getCurrencyCode() + " not found" );
+    }
+
+    @ExceptionHandler( CurrencyAlreadyExistsException.class )
+    @ResponseStatus( HttpStatus.CONFLICT )
+    public Error handleJsonException( CurrencyAlreadyExistsException e )
+    {
+        log.error( e.getMessage() );
+        return new Error( "currency " + e.getCurrencyCode() + " already exists" );
     }
 }

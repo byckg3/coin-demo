@@ -1,8 +1,6 @@
-package demo.currency.model;
+package demo.currency.model.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -10,30 +8,52 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import demo.currency.model.Currency;
+import demo.currency.model.exception.CurrencyNotFoundException;
+import demo.currency.model.repository.CurrencyRepository;
+
 @Service
 @Transactional
-public class CurrencyService
+public class CurrencyServiceImpl implements CurrencyService
 {
     private CurrencyRepository currencyRepository;
 
     @Autowired
-    public CurrencyService( CurrencyRepository currRepo ) {
+    public CurrencyServiceImpl( CurrencyRepository currRepo ) {
         this.currencyRepository = currRepo;
     }
 
+    @Override
     public boolean currencyExists( String code ) {
         return currencyRepository.existsByCode( code );
     }
 
+    @Override
+    public List< Currency > getAll() {
+        return currencyRepository.findAll();
+    }
+
+    @Override
     public Currency save( Currency curr ) {
         return currencyRepository.save( curr );
     }
 
+    @Override
+    public void deleteByCode( String code ) {
+        currencyRepository.deleteByCode( code );
+    }
+
+    @Override
+    public Optional< Currency > findByCode( String code ) {
+        return currencyRepository.findByCodeIgnoringCase( code );
+    }
+
+    @Override
     public Currency updateByCode( String code, Currency patch )
     {
         Optional< Currency > foundCurrency = findByCode( code );
         if ( !foundCurrency.isPresent() ) {
-            return null;
+            throw new CurrencyNotFoundException( code );
         }
 
         Currency updated = foundCurrency.get();
@@ -45,35 +65,4 @@ public class CurrencyService
         }
         return save( updated );
     }
-
-    public void deleteByCode( String code ) {
-        currencyRepository.deleteByCode( code );
-    }
-
-    public Optional< Currency > findByCode( String code ) {
-        return currencyRepository.findByCodeIgnoringCase( code );
-    }
-
-    public List< Currency > findAll() {
-        return currencyRepository.findAll();
-    }
-
-    public String getNameByCode( String code )
-    {
-        Optional< Currency > foundCurrency = findByCode( code );
-        if ( !foundCurrency.isPresent() ) {
-            return "";
-        }
-        return foundCurrency.get().getName();
-    }
-
-    public Map< String, String > codeToNameMappings()
-	{
-		Map< String, String > mappings = new HashMap<>();
-        for ( Currency each: findAll() )
-        {
-            mappings.put( each.getCode(), each.getName() );
-        }
-        return mappings;
-	}
 }
