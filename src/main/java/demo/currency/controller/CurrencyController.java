@@ -1,11 +1,14 @@
 package demo.currency.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import demo.currency.model.Currency;
 import demo.currency.model.exception.CurrencyAlreadyExistsException;
@@ -33,7 +37,6 @@ public class CurrencyController
 {
     private CurrencyService currencyService;
     
-    @Autowired
     public CurrencyController( CurrencyService currService ) {
         this.currencyService = currService;
     }
@@ -55,13 +58,22 @@ public class CurrencyController
     }
 
     @PostMapping( consumes = "application/json" )
-    @ResponseStatus( HttpStatus.CREATED )
-    public Currency create( @RequestBody Currency curr )
+    public ResponseEntity< Currency > create( @RequestBody Currency curr, UriComponentsBuilder ucb )
     {
         if ( currencyService.currencyExists( curr.getCode() ) ) {
             throw new CurrencyAlreadyExistsException( curr.getCode(), curr.getName() );
         }
-        return currencyService.save( curr );
+        
+        Currency currency = currencyService.save( curr );
+
+        URI locationUri = ucb.path( "/currencies/" )
+                             .path( currency.getCode() )
+                             .build()
+                             .toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation( locationUri );
+
+        return new ResponseEntity< Currency >( currency, headers, HttpStatus.CREATED );
     }
 
     @PatchMapping( path = "/{code}", consumes = "application/json" )

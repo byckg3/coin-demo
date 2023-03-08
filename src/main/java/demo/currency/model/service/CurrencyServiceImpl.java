@@ -18,7 +18,6 @@ public class CurrencyServiceImpl implements CurrencyService
 {
     private CurrencyRepository currencyRepository;
 
-    @Autowired
     public CurrencyServiceImpl( CurrencyRepository currRepo ) {
         this.currencyRepository = currRepo;
     }
@@ -49,7 +48,7 @@ public class CurrencyServiceImpl implements CurrencyService
     }
 
     @Override
-    public Currency updateByCode( String code, Currency patch )
+    public Currency updateByCode( String code, Currency patch ) throws CurrencyNotFoundException
     {
         Optional< Currency > foundCurrency = findByCode( code );
         if ( !foundCurrency.isPresent() ) {

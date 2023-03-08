@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import demo.currency.model.service.CoindeskClient;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class CoindeskController
         return coindeskClient.getCurrentInfo();
     }
     
-    @ExceptionHandler( JsonProcessingException.class )
+    @ExceptionHandler( { JsonMappingException.class, JsonProcessingException.class } )
     @ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
     public String handleJsonException( JsonProcessingException e )
     {
