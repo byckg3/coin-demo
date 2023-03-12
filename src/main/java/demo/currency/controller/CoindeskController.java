@@ -25,7 +25,6 @@ public class CoindeskController
 {
     private CoindeskClient coindeskClient;
 
-    @Autowired
     public CoindeskController( CoindeskClient client )
     {
         this.coindeskClient = client;

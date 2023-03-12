@@ -10,7 +10,7 @@ import demo.currency.model.Currency;
 import demo.currency.model.service.CurrencyService;
 
 @Configuration
-public class AppBeans
+public class BeansConfiguration
 {
     @Bean
 	public Map< String, String > codeToNameMappings( CurrencyService currService )
