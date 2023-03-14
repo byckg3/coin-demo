@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import demo.currency.model.Currency;
+import demo.currency.model.repository.Currency;
 import demo.currency.model.service.CurrencyService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

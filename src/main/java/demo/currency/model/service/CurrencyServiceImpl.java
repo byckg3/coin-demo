@@ -5,11 +5,10 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import demo.currency.model.Currency;
 import demo.currency.model.exception.CurrencyNotFoundException;
+import demo.currency.model.repository.Currency;
 import demo.currency.model.repository.CurrencyRepository;
 
 @Service

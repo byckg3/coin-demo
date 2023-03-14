@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,15 +24,22 @@ public class CoindeskClient
     private final String url = "https://api.coindesk.com/v1/bpi/currentprice.json";
     private final String dateFormat = "yyyy/MM/dd HH:mm:ss";
     
-    @Autowired
-    public CoindeskClient( Map< String, String > mappings )
+    //@Autowired
+    public CoindeskClient( RestTemplateBuilder restTemplateBuilder, Map< String, String > mappings )
     {
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplateBuilder.build();
         this.namesByCodes = mappings;
     }
 
-    public void setCodeToNameMappings( Map< String, String > mappings ) {
+    public void setCodeToNameMappings( Map< String, String > mappings )
+    {
+        
         this.namesByCodes = mappings;
+    }
+
+    public Map< String, String > getCodeToNameMappings()
+    {
+        return this.namesByCodes;
     }
 
     public Map< String, Object > getCurrentPrice() throws JsonMappingException, JsonProcessingException

@@ -1,4 +1,4 @@
-package demo.currency.model;
+package demo.currency.model.repository;
 
 import java.util.Date;
 

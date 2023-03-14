@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import demo.currency.model.Currency;
 import demo.currency.model.exception.CurrencyAlreadyExistsException;
 import demo.currency.model.exception.CurrencyNotFoundException;
 import demo.currency.model.exception.Error;
+import demo.currency.model.repository.Currency;
 import demo.currency.model.service.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
 
