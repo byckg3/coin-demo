@@ -3,7 +3,7 @@ package demo.currency.model.service;
 import java.util.List;
 import java.util.Optional;
 
-import demo.currency.model.repository.Currency;
+import demo.currency.model.Currency;
 
 public interface CurrencyService
 {

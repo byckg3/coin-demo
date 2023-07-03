@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import demo.currency.model.repository.Currency;
+import demo.currency.model.Currency;
 import demo.currency.model.service.CurrencyService;
 
 @Configuration
