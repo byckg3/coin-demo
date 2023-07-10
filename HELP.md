@@ -12,6 +12,7 @@
 - docker exec -it <CONTAINER_ID> /bin/bash
 - docker exec -it $( docker ps -aq -f status=running ) /bin/bash
 - docker rm -v $( docker ps -aq -f status=exited )
+- docker login
 
 ## references
 - [Download openJDK 8](https://adoptium.net/temurin/releases/?version=8)

@@ -5,7 +5,7 @@ COPY ${JAR_FILE} currency_app.jar
 RUN java -Djarmode=layertools -jar currency_app.jar extract
 
 
-FROM openjdk:8-slim
+FROM openjdk:8-jre-slim
 WORKDIR /usr/src/currency-demo
 COPY demo.mv.db ./
 COPY --from=builder /usr/src/currency-demo/dependencies/ ./
