@@ -3,7 +3,7 @@
 - ./mvnw spring-boot:run
 - ./mvnw test
 - ./mvnw test -Dtest=< TestClassName >#< TestMethodName >
-- ./mvnw cleran package
+- ./mvnw clean package
 
 
 ## references
