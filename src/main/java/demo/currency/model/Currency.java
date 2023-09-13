@@ -29,9 +29,13 @@ public class Currency implements java.io.Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    @Id
-	@GeneratedValue( strategy = GenerationType.AUTO )
-	@JsonIgnore
+	public Currency( String code, String name ) {
+		this.code = code;
+		this.name = name;
+	}
+
+    @JsonIgnore
+	@Id @GeneratedValue( strategy = GenerationType.AUTO )
 	private Long id;
 
     @Column( unique = true, nullable = false )
@@ -51,9 +55,4 @@ public class Currency implements java.io.Serializable
 	@Version
 	@Column
 	private Integer version;
-
-	public Currency( String code, String name ) {
-		this.code = code;
-		this.name = name;
-	}
 }
