@@ -18,3 +18,4 @@
 - [Download openJDK 8](https://adoptium.net/temurin/releases/?version=8)
 - [Maven Polyglot](https://www.baeldung.com/maven-polyglot)
 - [Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
+- [Creating Docker Images with Spring Boot](https://www.baeldung.com/spring-boot-docker-images)
