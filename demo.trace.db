@@ -1,0 +1,3 @@
+2023-07-09 00:01:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CURRENCIES" not found (this database is empty); SQL statement:
+select currency0_.id as id1_0_, currency0_.code as code2_0_, currency0_.created_date as created_3_0_, currency0_.last_modified as last_mod4_0_, currency0_.name as name5_0_, currency0_.version as version6_0_ from currencies currency0_ [42104-214]

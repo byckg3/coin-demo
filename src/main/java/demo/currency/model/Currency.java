@@ -2,14 +2,14 @@ package demo.currency.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,7 +35,7 @@ public class Currency implements java.io.Serializable
 	}
 
     @JsonIgnore
-	@Id @GeneratedValue( strategy = GenerationType.AUTO )
+	@Id @GeneratedValue( strategy = GenerationType.IDENTITY )
 	private Long id;
 
     @Column( unique = true, nullable = false )
