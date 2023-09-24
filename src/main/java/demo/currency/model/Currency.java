@@ -18,14 +18,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@Entity
-@EntityListeners( value = AuditingEntityListener.class )
-@Table( name = "currencies" )
-public class Currency implements java.io.Serializable
+@NoArgsConstructor @EqualsAndHashCode( callSuper = true )
+@Entity @Table( name = "currencies" )
+public class Currency  extends BaseEntity implements java.io.Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -43,16 +42,4 @@ public class Currency implements java.io.Serializable
 
     @Column( nullable = false )
 	private String name;
-
-    @CreatedDate
-	@Column( name = "created_date", nullable = false, updatable = false )
-	private Date createdDate;
-
-	@LastModifiedDate
-	@Column( name = "last_modified", nullable = false )
-	private Date lastModified;
-
-	@Version
-	@Column
-	private Integer version;
 }

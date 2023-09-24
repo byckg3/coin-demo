@@ -1,6 +1,7 @@
 package demo.currency.model.service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class CoindeskClient
 
     private String convertIsoDateFormat( String dateString, String pattern )
     {
-        LocalDateTime dateTime = LocalDateTime.parse( dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME );
+        OffsetDateTime dateTime = OffsetDateTime.parse( dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME );
         return dateTime.format( DateTimeFormatter.ofPattern( pattern ) );
     }
 }
