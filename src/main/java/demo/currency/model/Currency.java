@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor @EqualsAndHashCode( callSuper = true )
 @Entity @Table( name = "currencies" )
-public class Currency  extends BaseEntity implements java.io.Serializable
+public class Currency extends BaseEntity implements java.io.Serializable
 {
     private static final long serialVersionUID = 1L;
 
