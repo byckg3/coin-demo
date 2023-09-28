@@ -13,7 +13,7 @@ public interface HeaderJdbcRepository
     List< Header > findAll();
     List< Header > findByDescriptionAndStatus( String description, String status );
 
-    boolean existsById(  Long id );
+    boolean existsById( Long id );
 
     void deleteById(  Long id  );
     //void deleteAllByIdInBatch( Iterable< Long > ids );

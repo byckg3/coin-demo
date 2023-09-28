@@ -1,3 +1,7 @@
+server:
+    port : 8081
+    error:
+        include-stacktrace: on-param
 spring:
     h2:
         console:

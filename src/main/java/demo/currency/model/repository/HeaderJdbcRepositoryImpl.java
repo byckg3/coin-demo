@@ -82,7 +82,7 @@ public class HeaderJdbcRepositoryImpl implements HeaderJdbcRepository
     {
         StringBuffer SELECT_BY_ID = new StringBuffer();
         SELECT_BY_ID.append( "SELECT * FROM " ).append( TABLE_NAME );
-        SELECT_BY_ID.append( " WHERE ID = ?" );
+        SELECT_BY_ID.append( " WHERE id = ?" );
 
         Header header = null;
         try
@@ -109,7 +109,7 @@ public class HeaderJdbcRepositoryImpl implements HeaderJdbcRepository
 		UPDATE_BY_ID.append( "UPDATE " ).append( TABLE_NAME ).append( " SET " );;
         UPDATE_BY_ID.append( "description = :description, url = :url, priority = :priority, status = :status, open_method = :openMethod, " );
         UPDATE_BY_ID.append( "modifier = :modifier, last_modified = :lastModified " );
-        UPDATE_BY_ID.append( "WHERE ID = :id" );
+        UPDATE_BY_ID.append( "WHERE id = :id" );
         
         namedParameterJdbcTemplate.update( UPDATE_BY_ID.toString(), new BeanPropertySqlParameterSource( entity ) );
 	}
@@ -119,7 +119,7 @@ public class HeaderJdbcRepositoryImpl implements HeaderJdbcRepository
     {
         StringBuffer DELETE_BY_ID = new StringBuffer();
         DELETE_BY_ID.append( "DELETE FROM " ).append( TABLE_NAME );
-        DELETE_BY_ID.append( " WHERE ID = ?" );
+        DELETE_BY_ID.append( " WHERE id = ?" );
 
          namedParameterJdbcTemplate.getJdbcOperations().update( DELETE_BY_ID.toString(), id );
     }

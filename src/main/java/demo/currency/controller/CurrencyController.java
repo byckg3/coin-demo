@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -76,9 +77,15 @@ public class CurrencyController
     }
 
     @PatchMapping( path = "/{code}", consumes = "application/json" )
-    public Currency update( @PathVariable( "code" ) String code, @RequestBody Currency patch )
+    public Currency patchByCode( @PathVariable( "code" ) String code, @RequestBody Currency patch )
     {
         return currencyService.updateByCode( code, patch );
+    }
+
+    @PutMapping( path = "/{code}", consumes = "application/json" )
+    public Currency updateByCode( @PathVariable( "code" ) String code, @RequestBody Currency patch )
+    {
+        return patchByCode( code, patch );
     }
 
     @DeleteMapping( "/{code}" )
@@ -96,7 +103,7 @@ public class CurrencyController
 
     @ExceptionHandler( CurrencyNotFoundException.class )
     @ResponseStatus( HttpStatus.NOT_FOUND )
-    public Error handleJsonException( CurrencyNotFoundException e )
+    public Error handleCurrencyException( CurrencyNotFoundException e )
     {
         log.error( e.getMessage() );
         return new Error( "currency " + e.getCurrencyCode() + " not found" );
@@ -104,9 +111,17 @@ public class CurrencyController
 
     @ExceptionHandler( CurrencyAlreadyExistsException.class )
     @ResponseStatus( HttpStatus.CONFLICT )
-    public Error handleJsonException( CurrencyAlreadyExistsException e )
+    public Error handleCurrencyException( CurrencyAlreadyExistsException e )
     {
         log.error( e.getMessage() );
         return new Error( "currency " + e.getCurrencyCode() + " already exists" );
+    }
+
+    @ExceptionHandler( Exception.class )
+    @ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
+    public String handleException( Exception e )
+    {
+        log.error( e.getMessage() );
+        return "{ msg: \"error occurs\" }";
     }
 }

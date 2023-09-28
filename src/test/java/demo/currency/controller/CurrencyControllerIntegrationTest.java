@@ -49,7 +49,7 @@ public class CurrencyControllerIntegrationTest
     {
         String jsonString = new ObjectMapper().writeValueAsString( expected );
         mockMvc.perform( post( "/currencies" ).contentType( MediaType.APPLICATION_JSON )
-                                              .content( jsonString ) )
+                                                          .content( jsonString ) )
                .andExpect( status().isCreated() );
     }
 

@@ -25,8 +25,9 @@ public abstract class BaseEntity  // base class for entity with common propertie
 	@Column( name = "created_date", nullable = false, updatable = false )
 	private OffsetDateTime createdDate;
 
+	@JsonIgnore
 	@LastModifiedDate
-	@Column( name = "last_modified" )
+	@Column( name = "last_modified", nullable = false )
 	private OffsetDateTime lastModified;
 
 	@JsonIgnore
