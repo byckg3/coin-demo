@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import demo.currency.config.AppProperties;
 import demo.currency.model.Header;
 import demo.currency.model.service.HeaderService;
 
@@ -37,10 +38,12 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin( origins = "*" )
 public class HeaderController
 {
+    private AppProperties appProps;
     private HeaderService headerService;
     
-    public HeaderController( HeaderService currService ) {
+    public HeaderController( HeaderService currService, AppProperties props  ) {
         this.headerService = currService;
+        this.appProps = props;
     }
 
     // @GetMapping()  // When the parameter isn't specified, the method parameter is bound to null.
@@ -53,17 +56,18 @@ public class HeaderController
     {
         try
         {
-            String description = allParams.getOrDefault( "description", null );
-            String status = allParams.getOrDefault( "status", null );
-            Integer pageNumber = Integer.valueOf( allParams.getOrDefault( "page", "0" ) );
-            Integer pageSize = Integer.valueOf( allParams.getOrDefault( "size", "20" ) );
-
+            var description = allParams.getOrDefault( "description", null );
+            var status = allParams.getOrDefault( "status", null );
+            var pageNumber = Integer.valueOf( allParams.getOrDefault( "page", "0" ) );
+            var pageSize = Integer.valueOf( allParams.getOrDefault( "size", appProps.getPageSize().toString() ) );
+            
             Pageable pageRequest = createPageRequestUsing( pageNumber, pageSize );
 
             return headerService.getByDescriptionAndStatus( description, status, pageRequest ).getContent();
         }
         catch( Exception ex )
         {
+            log.error( ex.getMessage() );
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Provide correct parameters", ex );
         }
     }

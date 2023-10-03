@@ -1,4 +1,4 @@
-package demo.currency.model.component;
+package demo.currency.config;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

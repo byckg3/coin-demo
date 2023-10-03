@@ -1,4 +1,4 @@
-package demo.currency.model.component;
+package demo.currency.config;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

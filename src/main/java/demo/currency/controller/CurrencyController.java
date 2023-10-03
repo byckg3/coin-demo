@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import demo.currency.config.AppProperties;
 import demo.currency.model.Currency;
 import demo.currency.model.exception.CurrencyAlreadyExistsException;
 import demo.currency.model.exception.CurrencyNotFoundException;
@@ -39,23 +41,28 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin( origins = "*" )
 public class CurrencyController
 {
+    private AppProperties appProps;
     private CurrencyService currencyService;
     
-    public CurrencyController( CurrencyService currService ) {
+    @Autowired
+    public CurrencyController( CurrencyService currService, AppProperties props ) {
         this.currencyService = currService;
+        this.appProps = props;
     }
 
     @GetMapping()
     public List< Currency > getAll( @RequestParam Optional< Integer > page, @RequestParam Optional< Integer > size )
     {
-        var pageRequest = PageRequest.of( page.orElse( 0 ), size.orElse( 10 ), Sort.by( "createdDate" ).descending() );
+        var pageRequest = PageRequest.of( page.orElse( 0 ),
+                                          size.orElse( appProps.getPageSize() ),
+                                          Sort.by( "createdDate" ).descending() );
         
         return currencyService.getAll( pageRequest ).getContent();
     }
 
     @GetMapping( "/{code}" )
     @ResponseStatus( HttpStatus.OK )
-    public Currency get( @PathVariable( "code" ) String code )
+    public Currency getByCode( @PathVariable( "code" ) String code )
     {
         Optional< Currency > foundCurrency = currencyService.findByCode( code );
         if( !foundCurrency.isPresent() ) {

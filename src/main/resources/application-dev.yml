@@ -17,4 +17,5 @@ spring:
 
 logging:
     level:
-        org.springframework.jdbc.core: INFO
+        org.springframework:
+            jdbc.core: INFO
