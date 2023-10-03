@@ -20,6 +20,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.UnsupportedEncodingException;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -40,7 +43,7 @@ public class CurrencyControllerIntegrationTest
                                   .andExpect( jsonPath( "$" ).isArray() )
                                   .andReturn();
         
-        System.out.println( result.getResponse().getContentAsString() );
+        printResponseContent( result );
     }
 
     @Test
@@ -62,7 +65,7 @@ public class CurrencyControllerIntegrationTest
                                   .andExpect( jsonPath( "$.name" ).value( expected.getName() ) )
                                   .andReturn();
         
-        System.out.println( result.getResponse().getContentAsString() );
+        printResponseContent( result );
     }
 
     @Test
@@ -71,12 +74,12 @@ public class CurrencyControllerIntegrationTest
     {
         String patchString = "台幣";
         MvcResult result = mockMvc.perform( patch( "/currencies/" + expected.getCode() ).contentType( MediaType.APPLICATION_JSON )
-                                                                 .content( "{\"name\":\"" + patchString + "\"}" ) )
+                                                                                        .content( "{\"name\":\"" + patchString + "\"}" ) )
                                   .andExpect( status().isOk() )
                                   .andExpect( jsonPath( "$.name" ).value( patchString ) )
                                   .andReturn();
         
-        System.out.println( result.getResponse().getContentAsString() );
+        printResponseContent( result );
     }
 
     @Test
@@ -85,5 +88,10 @@ public class CurrencyControllerIntegrationTest
     {
         mockMvc.perform( delete( "/currencies/" + expected.getCode() ) )
                .andExpect( status().isNoContent() );
+    }
+
+    private void printResponseContent( MvcResult result ) throws UnsupportedEncodingException
+    {
+        System.out.println( result.getResponse().getContentAsString() );
     }
 }

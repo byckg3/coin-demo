@@ -44,7 +44,7 @@ public class HeaderService
     {
         List< Header > foundHeaders = headerJdbcRepository.findByDescriptionAndStatus( description, status );
 
-        int start = ( int ) pageRequest.getOffset();
+        int start = Math.min( ( int ) pageRequest.getOffset(), foundHeaders.size() );
         int end = Math.min( ( start + pageRequest.getPageSize() ), foundHeaders.size() );
 
         List< Header > pageContent = foundHeaders.subList( start, end );

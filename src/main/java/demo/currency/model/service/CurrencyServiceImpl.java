@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import demo.currency.model.Currency;
@@ -29,6 +31,12 @@ public class CurrencyServiceImpl implements CurrencyService
     @Override
     public List< Currency > getAll() {
         return currencyRepository.findAll();
+    }
+
+    @Override
+    public Page< Currency > getAll( Pageable pageRequest )
+    {
+        return currencyRepository.findAll( pageRequest );
     }
 
     @Override

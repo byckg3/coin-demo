@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -21,6 +23,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,12 +44,12 @@ public class CurrencyControllerTest
     }
 
     @Test
-    void givenCurrencies_whenMockMVC_thenVerifyResponse() throws Exception
+    void givenCurrencies_whenCallGetAll_thenVerifyResponse() throws Exception
     {
         List< Currency > all = new ArrayList< Currency >();
         all.add( expected );
 
-        Mockito.when( currencyService.getAll() ).thenReturn( all );
+        Mockito.when( currencyService.getAll( any( Pageable.class ) ) ).thenReturn( new PageImpl< Currency >( all ) );
 
         MvcResult result = mockMvc.perform( get( "/currencies" ) )
                                   .andExpect( status().isOk() )

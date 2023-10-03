@@ -1,8 +1,10 @@
 package demo.currency.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode( callSuper = true )
 public class Header  extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

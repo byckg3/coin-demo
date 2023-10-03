@@ -2,6 +2,7 @@ package demo.currency.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,14 +43,34 @@ public class HeaderController
         this.headerService = currService;
     }
 
+    // @GetMapping()  // When the parameter isn't specified, the method parameter is bound to null.
+    // public Page< Header > getByDescriptionAndStatus( @RequestParam( required = false ) String description,
+    //                                                  @RequestParam( required = false ) String status,
+    //                                                  @RequestParam Optional< Integer > page,
+    //                                                  @RequestParam Optional< Integer > size )
     @GetMapping()
-    public List< Header > getAll() {
-        return headerService.getAll();
+    public List< Header > getByDescriptionAndStatus( @RequestParam Map< String, String > allParams )
+    {
+        try
+        {
+            String description = allParams.getOrDefault( "description", null );
+            String status = allParams.getOrDefault( "status", null );
+            Integer pageNumber = Integer.valueOf( allParams.getOrDefault( "page", "0" ) );
+            Integer pageSize = Integer.valueOf( allParams.getOrDefault( "size", "20" ) );
+
+            Pageable pageRequest = createPageRequestUsing( pageNumber, pageSize );
+
+            return headerService.getByDescriptionAndStatus( description, status, pageRequest ).getContent();
+        }
+        catch( Exception ex )
+        {
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Provide correct parameters", ex );
+        }
     }
 
     @GetMapping( "/{id}" ) // @RequestMapping( value = "/{id}", method = RequestMethod.GET )
     @ResponseStatus( HttpStatus.OK )
-    public Header get( @PathVariable( "id" ) Long id )
+    public Header getById( @PathVariable( "id" ) Long id )
     {
         try
         {
@@ -97,7 +119,7 @@ public class HeaderController
         {
             return headerService.editById( id, patch );
         }
-        catch(  Exception ex )
+        catch( Exception ex )
         {
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Provide correct Id", ex );
         }
