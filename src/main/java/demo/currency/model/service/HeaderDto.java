@@ -5,23 +5,32 @@ import java.time.OffsetDateTime;
 import org.hibernate.validator.constraints.URL;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@JsonIgnoreProperties( { "ids" } )
+// @JsonInclude( Include.NON_NULL )
+@JsonIgnoreProperties( ignoreUnknown = true )
 public class HeaderDTO
 {
     private static final long serialVersionUID = 1L;
 
 	private Long id;
+
+	@JsonProperty( access = Access.WRITE_ONLY )
 	private Long[] ids;
 
 	@NotBlank
+	@Size( max = 10 )
 	private String description;
 
 	@URL

@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import demo.currency.config.AppProperties;
 import demo.currency.model.service.HeaderDTO;
 import demo.currency.model.service.HeaderService;
-
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -67,13 +67,11 @@ public class HeaderController
         }
         catch( Exception ex )
         {
-            log.error( ex.getMessage() );
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Provide correct parameters", ex );
         }
     }
 
     @GetMapping( "/{id}" ) // @RequestMapping( value = "/{id}", method = RequestMethod.GET )
-    @ResponseStatus( HttpStatus.OK )
     public HeaderDTO getById( @PathVariable( "id" ) Long id )
     {
         try
@@ -89,7 +87,7 @@ public class HeaderController
     }
 
     @PostMapping( consumes = "application/json" ) // @RequestMapping( consumes = "application/json", method = RequestMethod.POST )
-    public ResponseEntity< HeaderDTO > create( @RequestBody HeaderDTO headerDTO, UriComponentsBuilder ucb )
+    public ResponseEntity< HeaderDTO > create( @Valid @RequestBody HeaderDTO headerDTO, UriComponentsBuilder ucb )
     {
         var id = headerDTO.getId();
         if ( !ObjectUtils.isEmpty( id ) && headerService.headerExists( id ) )
@@ -117,7 +115,7 @@ public class HeaderController
     }
 
     @PatchMapping( path = "/{id}", consumes = "application/json" )
-    public HeaderDTO update( @PathVariable( "id" ) Long id, @RequestBody HeaderDTO patch )
+    public HeaderDTO update( @PathVariable( "id" ) Long id, @Valid @RequestBody HeaderDTO patch )
     {
         try
         {
@@ -141,7 +139,7 @@ public class HeaderController
             log.error( id + " " + e.getMessage() );
         }
     }
-
+    
     private Pageable createPageRequestUsing( int page, int size ) {
         return PageRequest.of( page, size );
     }
