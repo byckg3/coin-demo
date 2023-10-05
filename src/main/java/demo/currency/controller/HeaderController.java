@@ -27,7 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import demo.currency.config.AppProperties;
-import demo.currency.model.Header;
+import demo.currency.model.service.HeaderDTO;
 import demo.currency.model.service.HeaderService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class HeaderController
     //                                                  @RequestParam Optional< Integer > page,
     //                                                  @RequestParam Optional< Integer > size )
     @GetMapping()
-    public List< Header > getByDescriptionAndStatus( @RequestParam Map< String, String > allParams )
+    public List< HeaderDTO > getByDescriptionAndStatus( @RequestParam Map< String, String > allParams )
     {
         try
         {
@@ -74,11 +74,11 @@ public class HeaderController
 
     @GetMapping( "/{id}" ) // @RequestMapping( value = "/{id}", method = RequestMethod.GET )
     @ResponseStatus( HttpStatus.OK )
-    public Header getById( @PathVariable( "id" ) Long id )
+    public HeaderDTO getById( @PathVariable( "id" ) Long id )
     {
         try
         {
-            Optional< Header > foundHeader = headerService.getById( id );
+            Optional< HeaderDTO > foundHeader = headerService.getById( id );
 
             return foundHeader.get();
         }
@@ -89,9 +89,9 @@ public class HeaderController
     }
 
     @PostMapping( consumes = "application/json" ) // @RequestMapping( consumes = "application/json", method = RequestMethod.POST )
-    public ResponseEntity< Header > create( @RequestBody Header header, UriComponentsBuilder ucb )
+    public ResponseEntity< HeaderDTO > create( @RequestBody HeaderDTO headerDTO, UriComponentsBuilder ucb )
     {
-        var id = header.getId();
+        var id = headerDTO.getId();
         if ( !ObjectUtils.isEmpty( id ) && headerService.headerExists( id ) )
         {
             throw new ResponseStatusException( HttpStatus.CONFLICT, "Header Already Exists" );
@@ -99,7 +99,7 @@ public class HeaderController
 
         try
         {
-            Header createdHeader = headerService.save( header );
+            HeaderDTO createdHeader = headerService.save( headerDTO );
 
             URI locationUri = ucb.path( "/headers/" )
                                  .path( createdHeader.getId().toString() )
@@ -108,7 +108,7 @@ public class HeaderController
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation( locationUri );
 
-            return new ResponseEntity< Header >( createdHeader, httpHeaders, HttpStatus.CREATED );
+            return new ResponseEntity< HeaderDTO >( createdHeader, httpHeaders, HttpStatus.CREATED );
         }
         catch( Exception ex )
         {
@@ -117,7 +117,7 @@ public class HeaderController
     }
 
     @PatchMapping( path = "/{id}", consumes = "application/json" )
-    public Header update( @PathVariable( "id" ) Long id, @RequestBody Header patch )
+    public HeaderDTO update( @PathVariable( "id" ) Long id, @RequestBody HeaderDTO patch )
     {
         try
         {

@@ -64,7 +64,7 @@ public class HeaderServiceTest
         int expectedTotalPages = ( int ) Math.ceil( expectedTotalElements / ( double ) pageSize ); // index of page: 0 ~ ( TotalPages - 1 )
         int expectedElements = Math.min( expectedTotalElements - indexOfFirst, pageSize );
 
-        Page< Header > headersPage = headerService.getByDescriptionAndStatus( "description", "1", usingPageRequest );
+        var headersPage = headerService.getByDescriptionAndStatus( "description", "1", usingPageRequest );
         var headers = headersPage.getContent();
         
         assertEquals( expectedElements, headers.size() );

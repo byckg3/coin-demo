@@ -32,37 +32,38 @@ public class HeaderService
         return headerJdbcRepository.existsById( id );
     }
 
-    public Optional< Header > getById( Long id ) {
-        return headerJdbcRepository.findById( id );
+    public Optional< HeaderDTO > getById( Long id )
+    {
+        var optHeader = headerJdbcRepository.findById( id );
+
+        return optHeader.map( HeaderMapper::toHeaderDTO );
     }
 
-    public List< Header > getAll() {
-        return headerJdbcRepository.findAll();
+    public List< HeaderDTO > getAll()
+    {
+        var headers = headerJdbcRepository.findAll();
+
+        return HeaderMapper.toHeaderDTOs( headers );
     }
 
-    public Page< Header > getByDescriptionAndStatus( String description, String status, Pageable pageRequest )
+    public Page< HeaderDTO > getByDescriptionAndStatus( String description, String status, Pageable pageRequest )
     {
         List< Header > foundHeaders = headerJdbcRepository.findByDescriptionAndStatus( description, status );
 
         int start = Math.min( ( int ) pageRequest.getOffset(), foundHeaders.size() );
         int end = Math.min( ( start + pageRequest.getPageSize() ), foundHeaders.size() );
 
-        List< Header > pageContent = foundHeaders.subList( start, end );
+        List< HeaderDTO > pageContent = HeaderMapper.toHeaderDTOs( foundHeaders.subList( start, end ) );
 
-        return new PageImpl< Header >( pageContent, pageRequest, foundHeaders.size() );
+        return new PageImpl< HeaderDTO >( pageContent, pageRequest, foundHeaders.size() );
     }
 
-    public Header save( Header header )
+    public HeaderDTO save( HeaderDTO headerDTO )
     {
-        OffsetDateTime lastModified = OffsetDateTime.now( ZoneOffset.UTC );
-        
-        header.setLastModified( lastModified );
+        var header = HeaderMapper.toHeader( headerDTO );
+        var savedHeader = save( header );
 
-        if ( header.getId() == null ) 
-        {
-			header.setCreatedDate( lastModified );
-		} 
-        return headerJdbcRepository.save( header );
+        return HeaderMapper.toHeaderDTO( savedHeader );
     }
 
     public void deleteById( Long id ) {
@@ -76,9 +77,9 @@ public class HeaderService
         }
     }
 
-    public Header editById( Long id, Header patch )
+    public HeaderDTO editById( Long id, HeaderDTO patch )
     {
-        Optional< Header > foundHeader = getById( id );
+        Optional< Header > foundHeader = headerJdbcRepository.findById( id );
         if ( !foundHeader.isPresent() ) {
             // to do
             throw new RuntimeException( "Header not found" );
@@ -101,13 +102,27 @@ public class HeaderService
         if ( StringUtils.hasText( patch.getModifier() ) ) {
             updated.setModifier( patch.getModifier() );
         }
-        return save( updated );
+        var updatedHeader = save( updated );
+
+        return HeaderMapper.toHeaderDTO( updatedHeader );
     }
 
-    public void updateAllById( Iterable< Long > ids, Header patch )
+    public void updateAllById( Iterable< Long > ids, HeaderDTO patch )
     {
         for ( Long id : ids ) {
             editById( id, patch );
         }
+    }
+
+    private Header save( Header header )
+    {
+        var lastModified = OffsetDateTime.now( ZoneOffset.UTC );
+
+        header.setLastModified( lastModified );
+        if ( ObjectUtils.isEmpty( header.getId() ) ) {
+			header.setCreatedDate( lastModified );
+		}
+
+        return headerJdbcRepository.save( header );
     }
 }
