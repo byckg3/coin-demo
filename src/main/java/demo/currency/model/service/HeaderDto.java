@@ -30,7 +30,7 @@ public class HeaderDTO
 	private Long[] ids;
 
 	@NotBlank
-	@Size( max = 10 )
+	@Size( max = 20 )
 	private String description;
 
 	@URL

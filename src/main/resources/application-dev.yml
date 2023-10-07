@@ -19,3 +19,4 @@ logging:
     level:
         org.springframework:
             jdbc.core: INFO
+        demo.currency.controller: DEBUG

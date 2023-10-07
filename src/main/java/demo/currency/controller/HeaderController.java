@@ -67,6 +67,7 @@ public class HeaderController
         }
         catch( Exception ex )
         {
+            log.error( ex.getMessage());
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Provide correct parameters", ex );
         }
     }
@@ -98,7 +99,7 @@ public class HeaderController
         try
         {
             HeaderDTO createdHeader = headerService.save( headerDTO );
-
+            
             URI locationUri = ucb.path( "/headers/" )
                                  .path( createdHeader.getId().toString() )
                                  .build()
