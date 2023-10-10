@@ -26,7 +26,7 @@ public class HeaderDTO
 
 	private Long id;
 
-	@JsonProperty( access = Access.WRITE_ONLY ) // only for seeter
+	@JsonProperty( access = Access.WRITE_ONLY ) // only for setter
 	private Long[] ids;
 
 	@NotBlank
