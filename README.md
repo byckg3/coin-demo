@@ -1,6 +1,8 @@
 # currency-demo
-## commands
-- ./gradlew test --tests <TEST_CLASS_NAME>
+### commands
+- ./gradlew bootRun
+- ctrl + c
+
 
 
 ## references
